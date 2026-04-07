@@ -1,0 +1,55 @@
+from enum import StrEnum
+
+
+class EmployeeStatus(StrEnum):
+    ACTIVE = "ACTIVE"
+    INACTIVE = "INACTIVE"
+    LEFT = "LEFT"
+
+
+class AssetStatus(StrEnum):
+    DRAFT = "DRAFT"
+    IN_STOCK = "IN_STOCK"
+    ASSIGNED = "ASSIGNED"
+    UNDER_REPAIR = "UNDER_REPAIR"
+    RESERVED = "RESERVED"
+    DISPOSED = "DISPOSED"
+    SOLD = "SOLD"
+    SCRAPPED = "SCRAPPED"
+
+
+class AssignmentStatus(StrEnum):
+    ACTIVE = "ACTIVE"
+    RETURNED = "RETURNED"
+    TRANSFERRED = "TRANSFERRED"
+    CANCELLED = "CANCELLED"
+
+
+class EventType(StrEnum):
+    PURCHASED = "PURCHASED"
+    REGISTERED = "REGISTERED"
+    ASSIGNED = "ASSIGNED"
+    TRANSFERRED = "TRANSFERRED"
+    RETURNED = "RETURNED"
+    REPAIR_STARTED = "REPAIR_STARTED"
+    REPAIR_COMPLETED = "REPAIR_COMPLETED"
+    UPGRADED = "UPGRADED"
+    DISPOSED = "DISPOSED"
+    SOLD = "SOLD"
+    SCRAPPED = "SCRAPPED"
+    NOTE_ADDED = "NOTE_ADDED"
+
+
+class MaintenanceStatus(StrEnum):
+    PLANNED = "PLANNED"
+    IN_PROGRESS = "IN_PROGRESS"
+    COMPLETED = "COMPLETED"
+    CANCELLED = "CANCELLED"
+
+
+class DisposalMethod(StrEnum):
+    SOLD = "SOLD"
+    SCRAPPED = "SCRAPPED"
+    DONATED = "DONATED"
+    RETURNED_TO_VENDOR = "RETURNED_TO_VENDOR"
+    LOST = "LOST"

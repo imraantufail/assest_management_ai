@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from app.db.session import get_db
 from app.models.catalog import AssetCategory
-from app.schemas.catalog import AssetCategoryCreate, AssetCategoryRead
+from app.schemas.catalog import AssetCategoryCreate, AssetCategoryRead, AssetCategoryUpdate
 
 router = APIRouter()
 
@@ -21,3 +21,30 @@ def create_category(payload: AssetCategoryCreate, db: Session = Depends(get_db))
     db.commit()
     db.refresh(category)
     return category
+
+
+@router.put("/categories/{category_id}", response_model=AssetCategoryRead)
+def update_category(
+    category_id: str,
+    payload: AssetCategoryUpdate,
+    db: Session = Depends(get_db),
+) -> AssetCategory:
+    category = db.get(AssetCategory, category_id)
+    if not category:
+        from fastapi import HTTPException
+
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Category not found")
+
+    for field, value in payload.model_dump(exclude_unset=True).items():
+        setattr(category, field, value)
+    db.commit()
+    db.refresh(category)
+    return category
+
+
+@router.delete("/categories/{category_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_category(category_id: str, db: Session = Depends(get_db)) -> None:
+    category = db.get(AssetCategory, category_id)
+    if category:
+        db.delete(category)
+        db.commit()

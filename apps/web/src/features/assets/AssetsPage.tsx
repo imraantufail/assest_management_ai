@@ -27,6 +27,9 @@ type Asset = {
   serial_number: string;
   asset_name?: string | null;
   status: string;
+  purchase_date?: string | null;
+  warranty_expires_on?: string | null;
+  purchase_cost?: number | null;
 };
 
 const initialForm = {
@@ -125,6 +128,7 @@ export function AssetsPage() {
       {error ? <p className="error">{error}</p> : null}
 
       <form className="card form-grid" onSubmit={handleSubmit}>
+        <h4>Create asset</h4>
         <input
           placeholder="Asset code"
           value={form.asset_code}
@@ -172,6 +176,49 @@ export function AssetsPage() {
           <option value="ASSIGNED">Assigned</option>
           <option value="UNDER_REPAIR">Under repair</option>
         </select>
+        <input
+          placeholder="Processor or generation"
+          value={form.generation}
+          onChange={(event) => setForm((current) => ({ ...current, generation: event.target.value }))}
+        />
+        <input
+          placeholder="RAM"
+          value={form.ram}
+          onChange={(event) => setForm((current) => ({ ...current, ram: event.target.value }))}
+        />
+        <input
+          placeholder="Storage"
+          value={form.storage_spec}
+          onChange={(event) => setForm((current) => ({ ...current, storage_spec: event.target.value }))}
+        />
+        <input
+          placeholder="Screen size"
+          value={form.screen_size}
+          onChange={(event) => setForm((current) => ({ ...current, screen_size: event.target.value }))}
+        />
+        <input
+          type="date"
+          value={form.purchase_date}
+          onChange={(event) => setForm((current) => ({ ...current, purchase_date: event.target.value }))}
+        />
+        <input
+          type="date"
+          value={form.warranty_expires_on}
+          onChange={(event) =>
+            setForm((current) => ({ ...current, warranty_expires_on: event.target.value }))
+          }
+        />
+        <input
+          type="number"
+          placeholder="Purchase cost"
+          value={form.purchase_cost}
+          onChange={(event) => setForm((current) => ({ ...current, purchase_cost: event.target.value }))}
+        />
+        <textarea
+          placeholder="Notes"
+          value={form.notes}
+          onChange={(event) => setForm((current) => ({ ...current, notes: event.target.value }))}
+        />
         <button type="submit" className="button button--primary" disabled={saving}>
           {saving ? "Saving..." : "Create asset"}
         </button>

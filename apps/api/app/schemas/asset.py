@@ -37,3 +37,25 @@ class AssetRead(AssetBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: UUID
+
+
+class AssetUpdate(BaseModel):
+    asset_code: str | None = None
+    serial_number: str | None = None
+    asset_name: str | None = None
+    generation: str | None = None
+    ram: str | None = None
+    storage_spec: str | None = None
+    screen_size: str | None = None
+    purchase_date: date | None = None
+    warranty_expires_on: date | None = None
+    purchase_cost: Decimal | None = None
+    notes: str | None = None
+    status: AssetStatus | None = None
+    category_id: UUID | None = None
+    manufacturer_id: UUID | None = None
+    model_id: UUID | None = None
+    branch_id: UUID | None = None
+    location_id: UUID | None = None
+    department_id: UUID | None = None
+    current_employee_id: UUID | None = None

@@ -28,3 +28,17 @@ class EmployeeRead(EmployeeBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: UUID
+
+
+class EmployeeUpdate(BaseModel):
+    employee_code: str | None = None
+    full_name: str | None = None
+    email: str | None = None
+    job_title: str | None = None
+    status: EmployeeStatus | None = None
+    joined_on: date | None = None
+    left_on: date | None = None
+    notes: str | None = None
+    branch_id: UUID | None = None
+    department_id: UUID | None = None
+    location_id: UUID | None = None

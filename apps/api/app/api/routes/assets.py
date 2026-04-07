@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from app.db.session import get_db
 from app.models.asset import Asset
-from app.schemas.asset import AssetCreate, AssetRead
+from app.schemas.asset import AssetCreate, AssetRead, AssetUpdate
 
 router = APIRouter()
 
@@ -29,3 +29,24 @@ def create_asset(payload: AssetCreate, db: Session = Depends(get_db)) -> Asset:
     db.commit()
     db.refresh(asset)
     return asset
+
+
+@router.put("/{asset_id}", response_model=AssetRead)
+def update_asset(asset_id: str, payload: AssetUpdate, db: Session = Depends(get_db)) -> Asset:
+    asset = db.get(Asset, asset_id)
+    if not asset:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Asset not found")
+
+    for field, value in payload.model_dump(exclude_unset=True).items():
+        setattr(asset, field, value)
+    db.commit()
+    db.refresh(asset)
+    return asset
+
+
+@router.delete("/{asset_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_asset(asset_id: str, db: Session = Depends(get_db)) -> None:
+    asset = db.get(Asset, asset_id)
+    if asset:
+        db.delete(asset)
+        db.commit()

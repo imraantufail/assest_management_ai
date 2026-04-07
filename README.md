@@ -1,96 +1,95 @@
-# AssetFlow — IT Asset Life Management System
+# AssetFlow Rebuild Workspace
 
-A full-featured React + Vite web application for tracking IT assets (laptops, desktops) with complete chain-of-custody, high-turnover employee support, Excel import/export, and PDF report generation.
+This repository now contains two tracks:
 
-## Features
+- `src/` keeps the original browser-only prototype for reference.
+- `apps/api` contains the new FastAPI + PostgreSQL backend.
+- `apps/web` contains the new React + TypeScript frontend.
 
-- **Asset Register** — Track every device with full lifecycle status
-- **Chain of Custody** — Full traceability: Procurement → Employee A → Employee B → Scrapped
-- **High-turnover Safe** — 35 assets can pass through 50+ employees; each handover is logged
-- **Employee Management** — Active and former employees, assets held history
-- **Transfer** — Move any asset between employees with reason & approval
-- **Dispose / Sell / Scrap** — End-of-life with disposal method and sale price
-- **Service Log** — Maintenance and repair records per asset
-- **Excel Import / Export** — Full data round-trip via .xlsx
-- **PDF Reports** — Per-asset chain report + full fleet PDF
-- **Reset Database** — Wipe all data and reset ID counters to zero (start fresh)
-- **Persistent Storage** — Data saved in browser localStorage automatically
+## Why the rebuild exists
 
-## Setup & Run
+The original app stores business data in browser `localStorage`. That was enough for prototyping, but not for a real shared asset management system. The rebuild introduces:
 
-### Prerequisites
-- Node.js 18+ installed
-- npm or yarn
+- durable PostgreSQL storage
+- API-based validation and business rules
+- room for authentication, audit logs, and multi-user workflows
+- a cleaner path for advanced asset lifecycle features
 
-### Steps
+## New app structure
+
+```text
+apps/
+  api/   FastAPI backend + Alembic + SQLAlchemy models
+  web/   React + TypeScript + Vite frontend
+docs/
+  target-architecture.md
+  rebuild-roadmap.md
+src/
+  original prototype app
+```
+
+## Local development
+
+### 1. Start PostgreSQL
 
 ```bash
-# 1. Unzip the project
-unzip assetflow.zip
-cd assetflow
+docker compose up -d postgres
+```
 
-# 2. Install dependencies
+### 2. Run the API
+
+```bash
+cd apps/api
+python -m venv .venv
+.venv\Scripts\activate
+pip install -e .
+alembic upgrade head
+uvicorn app.main:app --reload
+```
+
+API base URL:
+
+```text
+http://localhost:8000/api
+```
+
+### 3. Run the web app
+
+```bash
+cd apps/web
 npm install
-
-# 3. Start development server
 npm run dev
-
-# 4. Open in browser
-# http://localhost:5173
 ```
 
-### Build for Production
+Web URL:
 
-```bash
-npm run build
-npm run preview
+```text
+http://localhost:5173
 ```
 
-## Usage Guide
+## First-run flow
 
-### Starting Fresh (Practice Mode)
-1. Go to **Settings → Reset Database**
-2. Click "Reset Entire Database"
-3. All counters reset to zero — first asset will be `AST-001`, first employee `EMP-001`
+1. Open the new web app.
+2. Go to `Settings`.
+3. Create your organization.
+4. Add one or more asset categories.
+5. Add employees.
+6. Add assets.
+7. View live counts on the dashboard.
 
-### Adding Assets
-1. Click **+ New Asset** from the Assets page
-2. Fill in device info, purchase details, and assign to an employee
-3. A "Purchase" chain event is automatically created
+## Current rebuild scope
 
-### Transferring an Asset
-1. From the Assets table, click the **↗** icon on any active asset
-2. Select the receiving employee, reason, and date
-3. The chain log is automatically updated
+- Organization bootstrap
+- Category create/list
+- Employee create/list
+- Asset create/list
+- Dashboard summary endpoint
+- Initial Alembic migration and SQLAlchemy schema scaffold
 
-### Disposing / Selling
-1. Click the **🗑** icon on any active asset
-2. Choose method: Scrapped, Sold, Donated, or Returned to Vendor
-3. Asset moves to the Scrapped & Sold page with full history
+## Next planned work
 
-### Export & Backup
-- **Settings → Export Excel** — downloads all data as .xlsx
-- **Settings → Fleet PDF** — full printable report
-- From any asset detail modal → **⬇ PDF** for single-asset chain report
-
-### Import
-- **Settings → Import Excel** — upload a previously exported .xlsx file
-- Counters are automatically calculated from the imported IDs
-
-## Data Storage
-
-Data is stored in **browser localStorage** under the key `assetflow-db`.
-- No backend or database server required
-- Use Export regularly to create external backups
-- Each browser/device has its own separate data store
-
-## Tech Stack
-
-| Package | Purpose |
-|---------|---------|
-| React 18 | UI framework |
-| Vite 5 | Build tool & dev server |
-| Zustand | State management + localStorage persistence |
-| xlsx | Excel import/export |
-| jsPDF + jspdf-autotable | PDF generation |
-| Inter + JetBrains Mono | Typography |
+- auth and roles
+- update/delete flows in the UI
+- richer asset lifecycle workflows
+- import from the old localStorage export
+- attachments and reports

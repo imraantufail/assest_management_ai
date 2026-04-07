@@ -1,7 +1,12 @@
 __pycache__/
 *.py[cod]
+*.egg-info/
+*.tsbuildinfo
 
 node_modules/
 dist/
 .venv/
 .env
+
+apps/web/vite.config.js
+apps/web/vite.config.d.ts

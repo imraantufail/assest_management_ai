@@ -184,6 +184,11 @@ h3 {
   color: var(--text);
 }
 
+.form-grid textarea {
+  min-height: 112px;
+  resize: vertical;
+}
+
 .button {
   border: 1px solid var(--line);
   border-radius: 14px;

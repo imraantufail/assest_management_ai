@@ -1,4 +1,4 @@
-from sqlalchemy import func, select
+from sqlalchemy import func, inspect, select
 from sqlalchemy.orm import Session
 
 from app.models.asset import Asset, MaintenanceRecord
@@ -32,11 +32,14 @@ def build_dashboard_summary(db: Session) -> DashboardSummary:
     active_employees = db.scalar(
         select(func.count()).select_from(Employee).where(Employee.status == EmployeeStatus.ACTIVE)
     ) or 0
-    pending_maintenance = db.scalar(
-        select(func.count()).select_from(MaintenanceRecord).where(
-            MaintenanceRecord.status.in_([MaintenanceStatus.PLANNED, MaintenanceStatus.IN_PROGRESS])
-        )
-    ) or 0
+    pending_maintenance = 0
+    bind = db.get_bind()
+    if bind is not None and inspect(bind).has_table("maintenance_records"):
+        pending_maintenance = db.scalar(
+            select(func.count()).select_from(MaintenanceRecord).where(
+                MaintenanceRecord.status.in_([MaintenanceStatus.PLANNED, MaintenanceStatus.IN_PROGRESS])
+            )
+        ) or 0
 
     expiring_warranties = 0
 
